@@ -1,0 +1,11 @@
+colorlog
+boto3
+pydantic
+langchain-core
+langchain
+langgraph
+langchain_openai
+lmnr[all]
+pytz
+pillow
+pyppeteer
