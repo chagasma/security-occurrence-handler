@@ -23,5 +23,5 @@ class EventInfo(BaseModel):
 
 class AttendantState(MessagesState):
     responsible_info: ResponsibleInfo
-    events_info = List[EventInfo]
+    events_info: List[EventInfo]
     status_final: Optional[Literal["ESCALADO", "RESOLVIDO"]] = None

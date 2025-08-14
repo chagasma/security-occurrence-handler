@@ -2,10 +2,10 @@ from typing import Dict
 
 from langgraph.graph import StateGraph
 from langgraph.constants import START, END
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import HumanMessage
 
 from src.agents.attendant.prompts import ATTENDANT_PROMPT
-from src.agents.attendant.states import AttendantState
+from src.agents.attendant.states import AttendantState, EventInfo, ResponsibleInfo
 from src.agents.attendant.tools import set_final_status
 from src.agents.core.nodes import SimpleLLMNode, ToolCallingNode
 from src.agents.core.routes import should_use_tools
@@ -26,8 +26,37 @@ def create_workflow(config: Dict = None):
     # edges
     workflow.add_edge(START, attendant_node.name)
     workflow.add_conditional_edges(attendant_node.name, lambda state: should_use_tools(state, attendant_tools_node.name, END), path_map=[attendant_tools_node.name, END])
+    workflow.add_edge(attendant_tools_node.name, attendant_node.name)
 
     return workflow.compile()
+
+
+def create_test_initial_state():
+    responsible_info = ResponsibleInfo(
+        name="Carlos",
+        phone_number="11987654321",
+        question="Qual seu hobby favorito?",
+        correct_answer="Caminhada",
+        panic_answer="Natação",
+        function="ZELADOR"
+    )
+
+    events_info = [
+        EventInfo(
+            name="ALARME DE ZONA SENSOR PORTA VEICULAR",
+            description="Disparo de alarme na zona de acesso veicular.",
+            date_time="2025-02-22T08:45:00-03:00",
+            zone_code="6 - SENSOR PORTA VEICULAR",
+            partition_code="02"
+        )
+    ]
+
+    return {
+        'messages': [HumanMessage(content="Iniciando atendimento de ocorrência")],
+        'responsible_info': responsible_info,
+        'events_info': events_info,
+        'status_final': None
+    }
 
 
 def run_graph():
@@ -36,9 +65,7 @@ def run_graph():
     graph = create_workflow(config=config)
     save_graph_as_png(graph, '../../../docs/attendant_graph.png')
 
-    initial_state = {
-        'messages': SystemMessage(content='Abra um chamado de emergência para a Auria AI')
-    }
+    initial_state = create_test_initial_state()
 
     try:
         for output in graph.stream(initial_state, config=config, subgraphs=True):
