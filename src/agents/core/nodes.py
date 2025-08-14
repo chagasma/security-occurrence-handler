@@ -5,6 +5,7 @@ from typing import Optional, Any, Callable, List, Dict
 from dotenv import load_dotenv
 from langchain_core.messages import SystemMessage, ToolMessage, AIMessage
 from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import ToolNode
 
 load_dotenv()
 
@@ -126,3 +127,19 @@ class StructuredOutputLLMNode(LLMNode):
         except Exception as e:
             print(f'Erro ao gerar resposta estruturada: {e}')
             return {}
+
+
+class ToolCallingNode(Node):
+    def __init__(self, name: str, tools: List[Any]):
+        super().__init__(name=name)
+        self.tools = tools
+        self.tool_node = ToolNode(self.tools)
+
+    def process(self, state: Any, config: Dict):
+        try:
+            tool_result = self.tool_node
+            return tool_result
+        except Exception as e:
+            return {
+                "messages": [SystemMessage(content=f"Ocorreu um erro ao processar essa solicitação: {e}")]
+            }

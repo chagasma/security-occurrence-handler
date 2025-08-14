@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Literal
 from pydantic import BaseModel
 
 from src.agents.core.states import MessagesState
@@ -24,3 +24,4 @@ class EventInfo(BaseModel):
 class AttendantState(MessagesState):
     responsible_info: ResponsibleInfo
     events_info = List[EventInfo]
+    status_final: Optional[Literal["ESCALADO", "RESOLVIDO"]] = None
