@@ -9,14 +9,13 @@ from src.agents.client.states import ClientState
 from src.agents.core.nodes import SimpleLLMNode
 from src.agents.core.utils import save_graph_as_png
 
-client_node = SimpleLLMNode(name='client_node', system_message=CLIENT_PROMPT)
-
 
 def create_workflow(config: Dict = None):
     workflow = StateGraph(ClientState)
 
     # nodes
-    workflow.add_node(client_node.name, client_node.process)
+    client_node = SimpleLLMNode(name='client_node', system_message=CLIENT_PROMPT)
+    workflow.add_node(client_node.name, lambda state: client_node.process(state, config))
 
     # edges
     workflow.add_edge(START, client_node.name)
