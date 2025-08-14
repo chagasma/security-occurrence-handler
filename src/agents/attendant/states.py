@@ -24,4 +24,3 @@ class EventInfo(BaseModel):
 class AttendantState(MessagesState):
     responsible_info: ResponsibleInfo
     events_info = List[EventInfo]
-    correct_panic_answer = str
