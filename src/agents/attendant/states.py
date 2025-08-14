@@ -1,5 +1,27 @@
+from typing import Optional, List
+from pydantic import BaseModel
+
 from src.agents.core.states import MessagesState
 
 
+class ResponsibleInfo(BaseModel):
+    name: str
+    phone_number: str
+    question: str
+    correct_answer: str
+    panic_answer: str
+    function: Optional[str] = None
+
+
+class EventInfo(BaseModel):
+    name: str
+    description: str
+    date_time: str
+    zone_code: str
+    partition_code: Optional[str] = None
+
+
 class AttendantState(MessagesState):
-    pass
+    responsible_info: ResponsibleInfo
+    events_info = List[EventInfo]
+    correct_panic_answer = str
