@@ -1,12 +1,5 @@
-from typing import Annotated
-
-from langchain_core.messages import AnyMessage
-from langgraph.graph import add_messages
-from pydantic import BaseModel
+from src.agents.core.states import MessagesState
 
 
-class ClientState(BaseModel):
-    messages: Annotated[list[AnyMessage], add_messages]
-
-    def __getitem__(self, item):
-        return getattr(self, item, None)
+class ClientState(MessagesState):
+    pass
