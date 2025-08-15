@@ -7,20 +7,23 @@ from langchain_core.messages import HumanMessage
 from src.agents.core.nodes import SimpleLLMNode, ToolCallingNode
 from src.agents.core.routes import should_use_tools
 from src.agents.core.utils import save_graph_as_png
-from src.agents.prompts import CLIENT_PROMPT, ATTENDANT_PROMPT
+from src.agents.prompts import get_attendant_prompt, get_client_prompt
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
 from src.agents.tools import set_final_status, validate_security_keyword
 
 
-def create_workflow(config: Dict = None):
+def create_workflow(initial_state: GraphState, config: Dict = None):
     workflow = StateGraph(GraphState)
 
+    attendant_prompt = get_attendant_prompt(initial_state.responsible_info, initial_state.events_info)
+    client_prompt = get_client_prompt(initial_state.responsible_info)
+
     # nodes
-    client_node = SimpleLLMNode(name='client_node', system_message=CLIENT_PROMPT)
+    client_node = SimpleLLMNode(name='client_node', system_message=client_prompt)
     workflow.add_node(client_node.name, lambda state: client_node.process(state, config))
 
     attendant_tools = [set_final_status, validate_security_keyword]
-    attendant_node = SimpleLLMNode(name='attendant_node', system_message=ATTENDANT_PROMPT, tools=attendant_tools)
+    attendant_node = SimpleLLMNode(name='attendant_node', system_message=attendant_prompt, tools=attendant_tools)
     workflow.add_node(attendant_node.name, lambda state: attendant_node.process(state, config))
 
     attendant_tools_node = ToolCallingNode(name='attendant_tools_node', tools=attendant_tools)
@@ -55,21 +58,20 @@ def create_test_initial_state():
         )
     ]
 
-    return {
-        'messages': [HumanMessage(content="Iniciando atendimento de ocorrência")],
-        'responsible_info': responsible_info,
-        'events_info': events_info,
-        'status_final': None
-    }
+    return GraphState(
+        messages=[HumanMessage(content="Iniciando atendimento de ocorrência")],
+        responsible_info=responsible_info,
+        events_info=events_info,
+        status_final=None
+    )
 
 
 def run_graph():
     config = {"configurable": {"thread_id": "client_id"}}
-
-    graph = create_workflow(config=config)
-    save_graph_as_png(graph, '../../docs/graph.png')
-
     initial_state = create_test_initial_state()
+
+    graph = create_workflow(initial_state, config=config)
+    save_graph_as_png(graph, '../../docs/graph.png')
 
     try:
         for output in graph.stream(initial_state, config=config):

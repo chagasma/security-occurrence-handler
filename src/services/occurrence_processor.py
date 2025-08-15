@@ -54,7 +54,7 @@ async def process_occurrence_async(hash_id: str, data: Dict):
         initial_state = parse_input_to_state(data)
 
         config = {"configurable": {"thread_id": hash_id}}
-        graph = create_workflow(config=config)
+        graph = create_workflow(initial_state, config=config)
 
         final_state = None
         max_iterations = 20
