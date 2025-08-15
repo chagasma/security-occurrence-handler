@@ -27,7 +27,7 @@ def create_workflow(initial_state: GraphState, config: Dict = None):
     workflow.add_node(attendant_node.name, lambda state: attendant_node.process(state, config))
 
     attendant_tools_node = ToolCallingNode(name='attendant_tools_node', tools=attendant_tools)
-    workflow.add_node(attendant_tools_node.name, attendant_tools_node.process)
+    workflow.add_node(attendant_tools_node.name, lambda state: attendant_tools_node.process(state, config))
 
     # edges
     workflow.add_edge(START, attendant_node.name)
