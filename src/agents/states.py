@@ -21,7 +21,7 @@ class EventInfo(BaseModel):
     partition_code: Optional[str] = None
 
 
-class AttendantState(MessagesState):
+class GraphState(MessagesState):
     responsible_info: ResponsibleInfo
     events_info: List[EventInfo]
     status_final: Optional[Literal["ESCALADO", "RESOLVIDO"]] = None
