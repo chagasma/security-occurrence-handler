@@ -38,13 +38,15 @@ def parse_input_to_state(data: Dict) -> GraphState:
     )
 
 
-def extract_conversation_messages(state: GraphState) -> list[Message]:
+def extract_conversation_messages(all_messages: list, node_outputs: list) -> list[Message]:
     messages = []
 
-    for msg in state.messages:
-        if isinstance(msg, AIMessage) and msg.content.strip():
-            sender = "atendente" if len(messages) % 2 == 0 else "cliente"
-            messages.append(Message(de=sender, mensagem=msg.content))
+    for i, (node_name, node_output) in enumerate(node_outputs):
+        if node_name in ['attendant_node', 'client_node'] and 'messages' in node_output:
+            for msg in node_output['messages']:
+                if isinstance(msg, AIMessage) and msg.content.strip():
+                    sender = 'atendente' if node_name == 'attendant_node' else 'cliente'
+                    messages.append(Message(de=sender, mensagem=msg.content))
 
     return messages
 
@@ -52,35 +54,36 @@ def extract_conversation_messages(state: GraphState) -> list[Message]:
 async def process_occurrence_async(hash_id: str, data: Dict):
     try:
         initial_state = parse_input_to_state(data)
-
         config = {"configurable": {"thread_id": hash_id}}
         graph = create_workflow(initial_state, config=config)
 
-        final_state = None
+        all_outputs = []
+        final_status = None
         max_iterations = 20
         iteration = 0
 
-        current_state = initial_state
-        for output in graph.stream(current_state, config=config):
+        for output in graph.stream(initial_state, config=config):
             iteration += 1
             if iteration > max_iterations:
                 break
 
             for node_name, node_output in output.items():
-                if "status_final" in node_output:
-                    final_state = current_state
-                    final_state.status_final = node_output["status_final"]
-                    break
+                all_outputs.append((node_name, node_output))
 
-        if final_state and final_state.status_final:
-            messages = extract_conversation_messages(final_state)
-            storage.update_occurrence(
-                hash_id,
-                status=final_state.status_final,
-                messages=messages
-            )
-        else:
-            storage.update_occurrence(hash_id, status="ESCALADO")
+                if hasattr(node_output, 'get') and node_output.get("status_final"):
+                    final_status = node_output["status_final"]
+
+            if final_status:
+                break
+
+        messages = extract_conversation_messages([], all_outputs)
+        final_status = final_status or "ESCALADO"
+
+        storage.update_occurrence(
+            hash_id,
+            status=final_status,
+            messages=messages
+        )
 
     except Exception as e:
         print(f"Erro no processamento da ocorrência {hash_id}: {e}")
