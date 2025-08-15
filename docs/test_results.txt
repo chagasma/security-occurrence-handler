@@ -1,0 +1,75 @@
+/home/inteli/dev/personal/security-occurrence-handler/venv/bin/python3.11 /home/inteli/dev/personal/security-occurrence-handler/tests/test_scenarios.py
+🚀 Iniciando bateria de testes de cenários
+============================================================
+
+🧪 Testando: correct_password_ok
+📊 Status esperado: RESOLVIDO
+🔑 Hash gerado: 9af0bcf5d94d555f88824acb41e6c355
+⏳ Aguardando processamento...
+✅ Status obtido: RESOLVIDO
+💬 Conversação:
+  atendente: Olá, Carlos! Para começarmos, por favor, me diga: qual é o seu hobby favorito?
+  cliente: Caminhada.
+  atendente: Aqui é da Auria AI. Houve um disparo na zona de acesso veicular. Está tudo bem?
+  cliente: Está tudo bem.
+  atendente: Obrigado, Carlos! Fico feliz em saber que está tudo bem. Atendimento finalizado. Se precisar de algo mais, estamos à disposição!
+
+🧪 Testando: wrong_password
+📊 Status esperado: ESCALADO
+🔑 Hash gerado: 7232a564247591358eaada40f6eddd4c
+⏳ Aguardando processamento...
+✅ Status obtido: ESCALADO
+💬 Conversação:
+  atendente: Olá, Carlos! Para começarmos, por favor, me diga: qual é o seu hobby favorito?
+  cliente: Palavra errada.
+  atendente: Infelizmente, a palavra-chave fornecida está incorreta. O atendimento foi escalado para a equipe de emergência. Se precisar de mais assistência, estamos à disposição.
+
+🧪 Testando: correct_password_danger
+📊 Status esperado: ESCALADO
+🔑 Hash gerado: bb7114c084ff69ade9d65736712c5be8
+⏳ Aguardando processamento...
+✅ Status obtido: ESCALADO
+💬 Conversação:
+  atendente: Olá, Carlos! Para começarmos, por favor, me diga: qual é o seu hobby favorito?
+  cliente: Caminhada.
+  atendente: Aqui é da Auria AI. Houve um disparo na zona de acesso veicular, está tudo bem?
+  cliente: Estou com perigo.
+  atendente: Entendido, Carlos. O status foi definido como ESCALADO. Agradecemos por sua colaboração e estamos aqui para ajudar.
+
+🧪 Testando: panic_word
+📊 Status esperado: ESCALADO
+🔑 Hash gerado: 21f42517aeceb163cb71ec33a8ff2cbc
+⏳ Aguardando processamento...
+✅ Status obtido: ESCALADO
+💬 Conversação:
+  atendente: Olá, Carlos! Para começarmos, por favor, me diga: qual é o seu hobby favorito?
+  cliente: Natação.
+  atendente: Detectei a palavra de pânico. O atendimento foi escalado imediatamente. Fique seguro!
+
+🧪 Testando: who_is_auria
+📊 Status esperado: RESOLVIDO
+🔑 Hash gerado: 99ed7d27a9dc44516c277569bafc13e6
+⏳ Aguardando processamento...
+✅ Status obtido: RESOLVIDO
+💬 Conversação:
+  atendente: Olá, Carlos! Para começarmos, por favor, me diga: qual é o seu hobby favorito?
+  cliente: Caminhada. Quem é Auria?
+  atendente: Somos a Auria AI, uma empresa de monitoramento de segurança com IA. Agora, vou validar sua resposta. Um momento, por favor.
+  atendente: Aqui é da Auria AI. Houve um disparo na zona de acesso veicular, está tudo bem?
+  cliente: Está tudo bem.
+  atendente: Obrigado, Carlos! O atendimento foi finalizado e a situação está resolvida. Se precisar de mais alguma coisa, estamos à disposição.
+
+============================================================
+📋 RELATÓRIO FINAL
+============================================================
+✅ correct_password_ok       | Esperado: RESOLVIDO  | Obtido: RESOLVIDO
+✅ wrong_password            | Esperado: ESCALADO   | Obtido: ESCALADO
+✅ correct_password_danger   | Esperado: ESCALADO   | Obtido: ESCALADO
+✅ panic_word                | Esperado: ESCALADO   | Obtido: ESCALADO
+✅ who_is_auria              | Esperado: RESOLVIDO  | Obtido: RESOLVIDO
+
+🎯 Sucessos: 5/5
+📈 Taxa de sucesso: 100.0%
+🎉 TODOS OS CENÁRIOS PASSARAM!
+
+Process finished with exit code 0
