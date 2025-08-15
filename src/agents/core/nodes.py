@@ -143,3 +143,17 @@ class ToolCallingNode(Node):
             return {
                 "messages": [SystemMessage(content=f"Ocorreu um erro ao processar essa solicitação: {e}")]
             }
+
+
+class FunctionalNode(Node):
+    def __init__(self, name: str, fn: Optional[Callable] = None):
+        super().__init__(name)
+        self.fn = fn
+
+    def process(self, state: Any, config: Dict) -> Dict:
+        result = self.fn(state)
+
+        if not isinstance(result, Dict):
+            raise TypeError("The function must return a Dict")
+
+        return result
