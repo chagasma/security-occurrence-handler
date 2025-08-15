@@ -9,7 +9,7 @@ from src.agents.core.routes import should_use_tools
 from src.agents.core.utils import save_graph_as_png
 from src.agents.prompts import CLIENT_PROMPT, ATTENDANT_PROMPT
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
-from src.agents.tools import set_final_status
+from src.agents.tools import set_final_status, validate_security_keyword
 
 
 def create_workflow(config: Dict = None):
@@ -19,10 +19,10 @@ def create_workflow(config: Dict = None):
     client_node = SimpleLLMNode(name='client_node', system_message=CLIENT_PROMPT)
     workflow.add_node(client_node.name, lambda state: client_node.process(state, config))
 
-    attendant_node = SimpleLLMNode(name='attendant_node', system_message=ATTENDANT_PROMPT)
+    attendant_tools = [set_final_status, validate_security_keyword]
+    attendant_node = SimpleLLMNode(name='attendant_node', system_message=ATTENDANT_PROMPT, tools=attendant_tools)
     workflow.add_node(attendant_node.name, lambda state: attendant_node.process(state, config))
 
-    attendant_tools = [set_final_status]
     attendant_tools_node = ToolCallingNode(name='attendant_tools_node', tools=attendant_tools)
     workflow.add_node(attendant_tools_node.name, attendant_tools_node.process)
 

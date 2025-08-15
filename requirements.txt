@@ -1,5 +1,4 @@
 colorlog
-boto3
 pydantic
 langchain-core
 langchain
@@ -9,3 +8,5 @@ lmnr[all]
 pytz
 pillow
 pyppeteer
+fastapi
+uvicorn[standard]
