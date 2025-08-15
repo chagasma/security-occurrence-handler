@@ -3,17 +3,13 @@ from typing import Dict, Literal, Annotated
 from langchain.tools import tool
 from langgraph.prebuilt import InjectedState
 
-from src.agents.states import ResponsibleInfo
+from src.agents.states import ResponsibleInfo, GraphState
 
 
 @tool
-def set_final_status(status: Literal["ESCALADO", "RESOLVIDO"], reason: str = "") -> Dict:
+def set_final_status(state: Annotated[GraphState, InjectedState], status: Literal["ESCALADO", "RESOLVIDO"], reason: str = "") -> Dict:
     """
     Define o status final do atendimento.
-
-    Args:
-        status: Status final - "ESCALADO" ou "RESOLVIDO"
-        reason: Motivo opcional para o status
 
     Returns:
         Dict confirmando a definição do status
@@ -25,6 +21,8 @@ def set_final_status(status: Literal["ESCALADO", "RESOLVIDO"], reason: str = "")
             return {
                 "error": f"Status inválido. Use: {', '.join(valid_statuses)}"
             }
+
+        state.status_final = status
 
         return {
             "status_final": status,

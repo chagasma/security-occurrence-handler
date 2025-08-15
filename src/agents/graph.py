@@ -5,11 +5,23 @@ from langgraph.constants import START, END
 from langchain_core.messages import HumanMessage
 
 from src.agents.core.nodes import SimpleLLMNode, ToolCallingNode
-from src.agents.core.routes import should_use_tools
 from src.agents.core.utils import save_graph_as_png
 from src.agents.prompts import get_attendant_prompt, get_client_prompt
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
 from src.agents.tools import set_final_status, validate_security_keyword
+
+
+def should_continue_or_end(state):
+    if hasattr(state, 'status_final') and state.status_final:
+        return END
+
+    messages = state['messages']
+    last_message = messages[-1]
+    tool_calls = last_message.tool_calls
+
+    if tool_calls:
+        return "attendant_tools_node"
+    return "client_node"
 
 
 def create_workflow(initial_state: GraphState, config: Dict = None):
@@ -31,7 +43,7 @@ def create_workflow(initial_state: GraphState, config: Dict = None):
 
     # edges
     workflow.add_edge(START, attendant_node.name)
-    workflow.add_conditional_edges(attendant_node.name, lambda state: should_use_tools(state, attendant_tools_node.name, client_node.name), path_map=[attendant_tools_node.name, client_node.name])
+    workflow.add_conditional_edges(attendant_node.name, should_continue_or_end, path_map=["attendant_tools_node", "client_node", END])
     workflow.add_edge(attendant_tools_node.name, attendant_node.name)
     workflow.add_edge(client_node.name, attendant_node.name)
 
