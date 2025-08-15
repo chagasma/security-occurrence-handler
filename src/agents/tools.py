@@ -1,6 +1,9 @@
-from typing import Dict, Literal
+from typing import Dict, Literal, Annotated
 
 from langchain.tools import tool
+from langgraph.prebuilt import InjectedState
+
+from src.agents.states import ResponsibleInfo
 
 
 @tool
@@ -33,22 +36,21 @@ def set_final_status(status: Literal["ESCALADO", "RESOLVIDO"], reason: str = "")
 
 
 @tool
-def validate_security_keyword(client_response: str, correct_answer: str, panic_answer: str) -> Dict:
+def validate_security_keyword(responsible_info: Annotated[ResponsibleInfo, InjectedState("responsible_info")], client_response: str) -> Dict:
     """
     Valida a palavra-chave de segurança fornecida pelo cliente.
-
-    Args:
-        client_response: Resposta do cliente
-        correct_answer: Resposta correta esperada
-        panic_answer: Resposta que indica situação de pânico
 
     Returns:
         Dict com resultado da validação
     """
     try:
-        response_clean = client_response.strip().lower()
+        correct_answer = responsible_info.correct_answer
+        panic_answer = responsible_info.panic_answer
+
         correct_clean = correct_answer.strip().lower()
         panic_clean = panic_answer.strip().lower()
+
+        response_clean = client_response.strip().lower()
 
         if response_clean == correct_clean:
             return {
