@@ -11,7 +11,12 @@ async def handle_occurrence(request: OccurrenceRequest, background_tasks: Backgr
     try:
         hash_id = storage.create_occurrence(request.model_dump())
 
-        background_tasks.add_task(process_occurrence_async, hash_id, request.model_dump())
+        background_tasks.add_task(
+            process_occurrence_async,
+            hash_id,
+            request.model_dump(),
+            request.scenario
+        )
 
         return OccurrenceResponse(hash=hash_id)
 

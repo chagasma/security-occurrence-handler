@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class OccurrenceRequest(BaseModel):
     test_cases: List[dict]
     test_suite_id: str
+    scenario: Optional[str] = "default"
 
 
 class OccurrenceResponse(BaseModel):

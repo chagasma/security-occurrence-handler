@@ -45,7 +45,42 @@ def get_attendant_prompt(responsible_info: ResponsibleInfo, events_info: List[Ev
     ''')
 
 
-def get_client_prompt(responsible_info: ResponsibleInfo) -> str:
+def get_client_prompt(responsible_info: ResponsibleInfo, scenario: str = "default") -> str:
+    scenario_instructions = {
+        "correct_password_ok": f"""
+        CENÁRIO: Caminho feliz
+        1. Quando perguntado sobre segurança, responda EXATAMENTE: "{responsible_info.correct_answer}"
+        2. Quando perguntado se está tudo bem, responda EXATAMENTE: "Está tudo bem"
+        """,
+
+        "wrong_password": f"""
+        CENÁRIO: Palavra errada
+        1. Quando perguntado sobre segurança, responda EXATAMENTE: "Palavra errada"
+        2. Não importa o que acontecer depois
+        """,
+
+        "correct_password_danger": f"""
+        CENÁRIO: Situação de perigo
+        1. Quando perguntado sobre segurança, responda EXATAMENTE: "{responsible_info.correct_answer}"
+        2. Quando perguntado se está tudo bem, responda EXATAMENTE: "Estou com perigo"
+        """,
+
+        "panic_word": f"""
+        CENÁRIO: Palavra de pânico
+        1. Quando perguntado sobre segurança, responda EXATAMENTE: "{responsible_info.panic_answer}"
+        2. Não importa o que acontecer depois
+        """,
+
+        "who_is_auria": f"""
+        CENÁRIO: Pergunta sobre Auria
+        1. Quando perguntado sobre segurança, responda EXATAMENTE: "{responsible_info.correct_answer}"
+        2. Imediatamente após, pergunte: "Quem é Auria?"
+        3. Depois da explicação, quando perguntado se está tudo bem, responda: "Está tudo bem"
+        """
+    }
+
+    instruction = scenario_instructions.get(scenario, "Responda naturalmente conforme a situação.")
+
     return dedent(f'''
     Você é {responsible_info.name}, {responsible_info.function}, recebendo atendimento de emergência da Auria AI.
 
@@ -56,17 +91,11 @@ def get_client_prompt(responsible_info: ResponsibleInfo) -> str:
     - Palavra de segurança correta: "{responsible_info.correct_answer}"
     - Palavra de pânico: "{responsible_info.panic_answer}"
 
+    {instruction}
+
     COMPORTAMENTO:
     - Responda como uma pessoa real recebendo uma ligação de emergência
     - Use linguagem natural e coloquial brasileira
     - Seja breve (1-2 frases por resposta)
-    - Mantenha coerência durante toda a conversa
-
-    INSTRUÇÃO PRINCIPAL:
-    - SEMPRE siga exatamente as instruções específicas que receber sobre como se comportar
-    - Obedeça às diretrizes fornecidas sobre quais respostas dar
-    - Mantenha o tom natural de uma pessoa real, mas responda conforme orientado
-    - Não improvise além do que foi especificamente solicitado
-
-    Aguarde instruções sobre como responder em cada situação.
+    - SIGA EXATAMENTE as instruções do cenário acima
     ''')

@@ -38,11 +38,11 @@ def parse_input_to_state(data: Dict) -> GraphState:
     )
 
 
-async def process_occurrence_async(hash_id: str, data: Dict):
+async def process_occurrence_async(hash_id: str, data: Dict, scenario: str = "default"):
     try:
         initial_state = parse_input_to_state(data)
         config = {"configurable": {"thread_id": hash_id}}
-        graph = create_workflow(initial_state, config=config)
+        graph = create_workflow(initial_state, config=config, scenario=scenario)
 
         messages = []
         final_status = None

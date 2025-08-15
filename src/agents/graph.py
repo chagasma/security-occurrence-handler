@@ -24,11 +24,11 @@ def should_continue_or_end(state):
     return "client_node"
 
 
-def create_workflow(initial_state: GraphState, config: Dict = None):
+def create_workflow(initial_state: GraphState, config: Dict = None, scenario: str = "default"):
     workflow = StateGraph(GraphState)
 
     attendant_prompt = get_attendant_prompt(initial_state.responsible_info, initial_state.events_info)
-    client_prompt = get_client_prompt(initial_state.responsible_info)
+    client_prompt = get_client_prompt(initial_state.responsible_info, scenario)
 
     # nodes
     client_node = SimpleLLMNode(name='client_node', system_message=client_prompt)
