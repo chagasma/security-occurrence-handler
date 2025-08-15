@@ -48,6 +48,7 @@ async def process_occurrence_async(hash_id: str, data: Dict):
         final_status = None
 
         for output in graph.stream(initial_state, config=config):
+            print(f'output: {output}')
             for node_name, node_output in output.items():
                 if node_name == 'attendant_node' and 'messages' in node_output:
                     for msg in node_output['messages']:
