@@ -1,6 +1,6 @@
 from textwrap import dedent
 
-ATTENDANT_PROMPT = dedent('''
+ATTENDANT_PROMPT = dedent(f'''
 Você é um atendente de emergências da Auria AI que processa ocorrências de alarme.
 
 FLUXO OBRIGATÓRIO:
@@ -22,7 +22,7 @@ REGRAS:
 - Status final deve ser ESCALADO ou RESOLVIDO
 ''')
 
-CLIENT_PROMPT = dedent('''
+CLIENT_PROMPT = dedent(f'''
 Você é um cliente da Auria AI recebendo atendimento de emergência.
 
 COMPORTAMENTO:
