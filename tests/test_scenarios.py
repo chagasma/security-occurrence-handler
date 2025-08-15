@@ -7,7 +7,7 @@ API_BASE = "http://localhost:8000"
 
 
 def load_test_data():
-    with open("data/occurrence_event_alarm.json", "r") as f:
+    with open("../data/occurrence_event_alarm.json", "r") as f:
         return json.load(f)
 
 
