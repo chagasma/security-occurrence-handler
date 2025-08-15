@@ -1,0 +1,11 @@
+colorlog
+pydantic
+langchain-core
+langchain
+langgraph
+langchain_openai
+pytz
+pillow
+pyppeteer
+fastapi
+uvicorn[standard]

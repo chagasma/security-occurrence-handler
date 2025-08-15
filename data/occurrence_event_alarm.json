@@ -1,0 +1,214 @@
+{
+  "test_cases": [
+    {
+      "client_context": {
+        "client_details": {
+          "general_question": "",
+          "general_correct_answer": "",
+          "general_panic_answer": "",
+          "type": "LEGAL_ENTITY",
+          "corporate_name": "RESIDENCIAL MONTE VERDE",
+          "trade_name": "RESIDENCIAL MONTE VERDE",
+          "federal_registration": "12345678000199",
+          "email": "contato@exemplo.com.br",
+          "phone_number_1": "",
+          "phone_number_2": "",
+          "address": {
+            "country": "Brasil",
+            "state": "SÃO PAULO",
+            "city": "SÃO PAULO",
+            "district": "JARDIM DAS FLORES",
+            "zip_code": "01234000",
+            "street": "Rua das Acácias, 123",
+            "number": "",
+            "region": "",
+            "additional_info": "",
+            "longitude": "",
+            "latitude": ""
+          },
+          "client_policy": "<p><br></p><p>NA DATA DE 10/01/25 FOI INSTALADO O SENSOR DE PORTA PEDESTRE. TODOS OS EVENTOS SEM RESTAURAÇÃO DEVEM SER TRATADOS. EM CASO DE PORTA ABERTA VISUALIZADA NAS CÂMERAS, ENTRAR EM CONTATO COM A ADMINISTRAÇÃO E NOTIFICAR O ZELADOR.</p>",
+          "temporary_notes": [],
+          "zones_details": [
+            {
+              "name": "ENTRADA PRINCIPAL",
+              "zone_code": "1",
+              "cameras": [
+                "1001 - 01 - RESIDENCIAL MONTE VERDE 01",
+                "1001 - 01 - RESIDENCIAL MONTE VERDE 02"
+              ],
+              "partition_code": "all",
+              "products_details": [
+                {
+                  "name": "IVP",
+                  "brand": "Genérico",
+                  "product_group": "Genérico"
+                }
+              ],
+              "id": ""
+            },
+            {
+              "name": "CERCA ELETRICA",
+              "zone_code": "2",
+              "cameras": [
+                "1001 - 02 - RESIDENCIAL MONTE VERDE"
+              ],
+              "partition_code": "all",
+              "products_details": [
+                {
+                  "name": "CERCA ELETRICA",
+                  "brand": "Genérico",
+                  "product_group": "Genérico"
+                }
+              ],
+              "id": ""
+            },
+            {
+              "name": "PANICO ELEVADOR SERVIÇO",
+              "zone_code": "3",
+              "cameras": [],
+              "partition_code": "all",
+              "products_details": [],
+              "id": ""
+            },
+            {
+              "name": "PANICO ELEVADOR SOCIAL",
+              "zone_code": "4",
+              "cameras": [],
+              "partition_code": "all",
+              "products_details": [],
+              "id": ""
+            },
+            {
+              "name": "SENSOR PORTA PEDESTRE",
+              "zone_code": "5",
+              "cameras": [],
+              "partition_code": "all",
+              "products_details": [],
+              "id": ""
+            },
+            {
+              "name": "SENSOR PORTA VEICULAR",
+              "zone_code": "6",
+              "cameras": [],
+              "partition_code": "all",
+              "products_details": [],
+              "id": ""
+            },
+            {
+              "name": "FALHA DE LINK",
+              "zone_code": "C1",
+              "cameras": [
+                "2001 - 01 - RESIDENCIAL MONTE VERDE - PORTARIA",
+                "2001 - 02 - RESIDENCIAL MONTE VERDE - PORTARIA",
+                "2001 - 03 - RESIDENCIAL MONTE VERDE - PORTARIA"
+              ],
+              "partition_code": "all",
+              "products_details": [],
+              "id": ""
+            }
+          ],
+          "partitions_details": [],
+          "responsibles_details": [
+            {
+              "name": "Carlos",
+              "phone_number_1": "11987654321",
+              "phone_number_2": "",
+              "question": "Qual seu hobby favorito?",
+              "correct_answer": "Caminhada",
+              "panic_answer": "Natação",
+              "contact_reasons": [],
+              "function": "ZELADOR",
+              "observation": "",
+              "partition_codes": "all",
+              "priority": 2
+            }
+          ],
+          "cameras_details": []
+        },
+        "service_order_details": {
+          "service_orders": [
+            {
+              "date_time": "2025-02-20T06:48:32-03:00",
+              "type": "Comunicação-GPRS",
+              "requester": "Monitoramento",
+              "status": "CLOSED"
+            },
+            {
+              "date_time": "2025-02-19T10:33:18-03:00",
+              "type": "Portaria Remota",
+              "requester": "Monitoramento",
+              "status": "CLOSED"
+            }
+          ]
+        },
+        "last_logs_details": [
+          {
+            "text": "APÓS VERIFICAÇÃO NAS CÂMERAS SEM ANORMALIDADES",
+            "date_time": "2025-02-21T15:17:08-03:00"
+          },
+          {
+            "text": "APÓS VERIFICAÇÃO NAS CÂMERAS SEM ANORMALIDADES",
+            "date_time": "2025-02-21T10:52:54-03:00"
+          },
+          {
+            "text": "APÓS VERIFICAÇÃO NAS CÂMERAS SEM ANORMALIDADES",
+            "date_time": "2025-02-21T09:52:44-03:00"
+          },
+          {
+            "text": "EVENTO SENDO ACOMPANHADO PELA CENTRAL.",
+            "date_time": "2025-02-21T01:10:50-03:00"
+          }
+        ],
+        "last_events_details": [
+          {
+            "name": "FALHA SUPERVISÃO DO PAINEL GPRS",
+            "description": "FALHA SUPERVISÃO DO PAINEL GPRS",
+            "contact_id": "",
+            "cuc": "",
+            "date_time": "2025-02-21T15:34:10-03:00",
+            "partition_code": "01",
+            "zone_code": "0 - ENTRADA PRINCIPAL"
+          },
+          {
+            "name": "RESTAURE DE CONEXÃO (KEEP ALIVE)",
+            "description": "RESTAURE DE CONEXÃO (KEEP ALIVE)",
+            "contact_id": "",
+            "cuc": "",
+            "date_time": "2025-02-21T15:34:08-03:00",
+            "partition_code": "XXX",
+            "zone_code": "0 - ENTRADA PRINCIPAL"
+          },
+          {
+            "name": "RESTAURAÇÃO DE COMUNICAÇÃO COM A CÂMERA 1001 RESIDENCIAL MONTE VERDE 01",
+            "description": "RESTAURAÇÃO DE COMUNICAÇÃO COM A CÂMERA 1001 RESIDENCIAL MONTE VERDE 01",
+            "contact_id": "",
+            "cuc": "",
+            "date_time": "2025-02-21T12:40:56-03:00",
+            "partition_code": "",
+            "zone_code": "C1 - FALHA DE LINK"
+          },
+          {
+            "name": "PERDA DE CONEXÃO MONITORADA",
+            "description": "PERDA DE CONEXÃO MONITORADA",
+            "contact_id": "",
+            "cuc": "",
+            "date_time": "2025-02-21T12:32:55-03:00",
+            "partition_code": "XXX",
+            "zone_code": "0 - ENTRADA PRINCIPAL"
+          }
+        ]
+      },
+      "events_details": [
+        {
+          "name": "ALARME DE ZONA SENSOR PORTA VEICULAR",
+          "description": "Disparo de alarme na zona de acesso veicular.",
+          "date_time": "2025-02-22T08:45:00-03:00",
+          "partition_code": "02",
+          "zone_code": "6 - SENSOR PORTA VEICULAR"
+        }
+      ],
+      "test_case_id": "teste_anonimo_001"
+    }
+  ],
+  "test_suite_id": "anonimizado"
+}
