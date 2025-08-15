@@ -5,6 +5,7 @@ from langgraph.constants import START, END
 from langchain_core.messages import HumanMessage
 
 from src.agents.core.nodes import SimpleLLMNode, ToolCallingNode
+from src.agents.core.routes import should_use_tools
 from src.agents.core.utils import save_graph_as_png
 from src.agents.prompts import CLIENT_PROMPT, ATTENDANT_PROMPT
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
@@ -26,8 +27,10 @@ def create_workflow(config: Dict = None):
     workflow.add_node(attendant_tools_node.name, attendant_tools_node.process)
 
     # edges
-    workflow.add_edge(START, client_node.name)
-    workflow.add_edge(client_node.name, END)
+    workflow.add_edge(START, attendant_node.name)
+    workflow.add_conditional_edges(attendant_node.name, lambda state: should_use_tools(state, attendant_tools_node.name, client_node.name), path_map=[attendant_tools_node.name, client_node.name])
+    workflow.add_edge(attendant_tools_node.name, attendant_node.name)
+    workflow.add_edge(client_node.name, attendant_node.name)
 
     return workflow.compile()
 
@@ -64,7 +67,7 @@ def run_graph():
     config = {"configurable": {"thread_id": "client_id"}}
 
     graph = create_workflow(config=config)
-    save_graph_as_png(graph, '../../../docs/graph.png')
+    save_graph_as_png(graph, '../../docs/graph.png')
 
     initial_state = create_test_initial_state()
 
