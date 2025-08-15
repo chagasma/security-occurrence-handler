@@ -33,7 +33,10 @@ def get_attendant_prompt(responsible_info: ResponsibleInfo, events_info: List[Ev
     5. Baseado na resposta final:
        - "Está tudo bem" → set_final_status("RESOLVIDO")
        - "Estou com perigo" → set_final_status("ESCALADO")
-       - "Quem é Auria?" → "Somos uma empresa de monitoramento de segurança" e continue
+
+    TRATAMENTOS ESPECIAIS:
+    - Se cliente perguntar "Quem é Auria?": Responda "Somos a Auria AI, uma empresa de monitoramento de segurança com IA." e continue o script normalmente
+    - Sempre mantenha foco no protocolo de segurança
 
     REGRAS:
     - Seja direto e profissional  
