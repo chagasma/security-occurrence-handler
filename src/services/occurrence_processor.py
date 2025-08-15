@@ -38,45 +38,30 @@ def parse_input_to_state(data: Dict) -> GraphState:
     )
 
 
-def extract_conversation_messages(all_messages: list, node_outputs: list) -> list[Message]:
-    messages = []
-
-    for i, (node_name, node_output) in enumerate(node_outputs):
-        if node_name in ['attendant_node', 'client_node'] and 'messages' in node_output:
-            for msg in node_output['messages']:
-                if isinstance(msg, AIMessage) and msg.content.strip():
-                    sender = 'atendente' if node_name == 'attendant_node' else 'cliente'
-                    messages.append(Message(de=sender, mensagem=msg.content))
-
-    return messages
-
-
 async def process_occurrence_async(hash_id: str, data: Dict):
     try:
         initial_state = parse_input_to_state(data)
         config = {"configurable": {"thread_id": hash_id}}
         graph = create_workflow(initial_state, config=config)
 
-        all_outputs = []
+        messages = []
         final_status = None
-        max_iterations = 20
-        iteration = 0
 
         for output in graph.stream(initial_state, config=config):
-            iteration += 1
-            if iteration > max_iterations:
-                break
-
             for node_name, node_output in output.items():
-                all_outputs.append((node_name, node_output))
+                if node_name == 'attendant_node' and 'messages' in node_output:
+                    for msg in node_output['messages']:
+                        if isinstance(msg, AIMessage) and msg.content.strip():
+                            messages.append(Message(de="atendente", mensagem=msg.content))
 
-                if hasattr(node_output, 'get') and node_output.get("status_final"):
-                    final_status = node_output["status_final"]
+                elif node_name == 'client_node' and 'messages' in node_output:
+                    for msg in node_output['messages']:
+                        if isinstance(msg, AIMessage) and msg.content.strip():
+                            messages.append(Message(de="cliente", mensagem=msg.content))
 
-            if final_status:
-                break
+                if 'status_final' in node_output:
+                    final_status = node_output['status_final']
 
-        messages = extract_conversation_messages([], all_outputs)
         final_status = final_status or "ESCALADO"
 
         storage.update_occurrence(
