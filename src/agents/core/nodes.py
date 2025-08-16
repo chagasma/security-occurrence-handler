@@ -113,22 +113,6 @@ class SimpleLLMNode(LLMNode):
             return {}
 
 
-class StructuredOutputLLMNode(LLMNode):
-    def process(self, state: Any, config: Dict) -> Dict:
-        messages = self._get_messages(state)
-
-        try:
-            llm_instance = self.llm.with_structured_output(
-                self.output_model,
-                method='function_calling'
-            )
-            result = llm_instance.invoke(messages, config)
-            return result.model_dump()
-        except Exception as e:
-            print(f'Erro ao gerar resposta estruturada: {e}')
-            return {}
-
-
 class ToolCallingNode(Node):
     def __init__(self, name: str, tools: List[Any]):
         super().__init__(name=name)
@@ -143,17 +127,3 @@ class ToolCallingNode(Node):
             return {
                 "messages": [SystemMessage(content=f"Ocorreu um erro ao processar essa solicitação: {e}")]
             }
-
-
-class FunctionalNode(Node):
-    def __init__(self, name: str, fn: Optional[Callable] = None):
-        super().__init__(name)
-        self.fn = fn
-
-    def process(self, state: Any, config: Dict) -> Dict:
-        result = self.fn(state)
-
-        if not isinstance(result, Dict):
-            raise TypeError("The function must return a Dict")
-
-        return result
