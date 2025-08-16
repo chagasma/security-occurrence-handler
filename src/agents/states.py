@@ -1,7 +1,8 @@
-from typing import Optional, List, Literal
-from pydantic import BaseModel
+from typing import Optional, List, Literal, Annotated
 
-from src.agents.core.states import MessagesState
+from langchain_core.messages import AnyMessage
+from langgraph.graph import add_messages
+from pydantic import BaseModel
 
 
 class ResponsibleInfo(BaseModel):
@@ -21,7 +22,11 @@ class EventInfo(BaseModel):
     partition_code: Optional[str] = None
 
 
-class GraphState(MessagesState):
+class GraphState(BaseModel):
+    messages: Annotated[list[AnyMessage], add_messages]
     responsible_info: ResponsibleInfo
     events_info: List[EventInfo]
     status_final: Optional[Literal["ESCALADO", "RESOLVIDO"]] = None
+
+    def __getitem__(self, item):
+        return getattr(self, item, None)

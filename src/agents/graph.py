@@ -4,8 +4,7 @@ from langgraph.graph import StateGraph
 from langgraph.constants import START, END
 from langchain_core.messages import HumanMessage
 
-from src.agents.core.nodes import SimpleLLMNode, ToolCallingNode
-from src.agents.core.utils import save_graph_as_png
+from src.agents.nodes import create_node, create_tools_node
 from src.agents.prompts import get_attendant_prompt, get_client_prompt
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
 from src.agents.tools import set_final_status, validate_security_keyword
@@ -31,21 +30,22 @@ def create_workflow(initial_state: GraphState, config: Dict = None, scenario: st
     client_prompt = get_client_prompt(initial_state.responsible_info, scenario)
 
     # nodes
-    client_node = SimpleLLMNode(name='client_node', system_message=client_prompt)
-    workflow.add_node(client_node.name, lambda state: client_node.process(state, config))
-
     attendant_tools = [set_final_status, validate_security_keyword]
-    attendant_node = SimpleLLMNode(name='attendant_node', system_message=attendant_prompt, tools=attendant_tools)
-    workflow.add_node(attendant_node.name, lambda state: attendant_node.process(state, config))
 
-    attendant_tools_node = ToolCallingNode(name='attendant_tools_node', tools=attendant_tools)
-    workflow.add_node(attendant_tools_node.name, lambda state: attendant_tools_node.process(state, config))
+    client_node_fn = create_node(client_prompt, node_type="cliente")
+    workflow.add_node('client_node', lambda state: client_node_fn(state, config))
+
+    attendant_node_fn = create_node(attendant_prompt, attendant_tools, "atendente")
+    workflow.add_node('attendant_node', lambda state: attendant_node_fn(state, config))
+
+    attendant_tools_node_fn = create_tools_node(attendant_tools)
+    workflow.add_node('attendant_tools_node', lambda state: attendant_tools_node_fn(state, config))
 
     # edges
-    workflow.add_edge(START, attendant_node.name)
-    workflow.add_conditional_edges(attendant_node.name, should_continue_or_end, path_map=["attendant_tools_node", "client_node", END])
-    workflow.add_edge(attendant_tools_node.name, attendant_node.name)
-    workflow.add_edge(client_node.name, attendant_node.name)
+    workflow.add_edge(START, 'attendant_node')
+    workflow.add_conditional_edges('attendant_node', should_continue_or_end, path_map=["attendant_tools_node", "client_node", END])
+    workflow.add_edge('attendant_tools_node', 'attendant_node')
+    workflow.add_edge('client_node', 'attendant_node')
 
     return workflow.compile()
 
@@ -83,7 +83,6 @@ def run_graph():
     initial_state = create_test_initial_state()
 
     graph = create_workflow(initial_state, config=config)
-    save_graph_as_png(graph, '../../docs/graph.png')
 
     try:
         for output in graph.stream(initial_state, config=config):
