@@ -5,7 +5,7 @@ from langgraph.constants import START, END
 from langchain_core.messages import HumanMessage
 
 from src.agents.core.nodes import SimpleLLMNode, ToolCallingNode
-from src.agents.core.utils import save_graph_as_png
+from src.agents.utils import save_graph_as_png
 from src.agents.prompts import get_attendant_prompt, get_client_prompt
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
 from src.agents.tools import set_final_status, validate_security_keyword
