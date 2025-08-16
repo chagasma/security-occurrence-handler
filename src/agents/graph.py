@@ -4,7 +4,7 @@ from langgraph.graph import StateGraph
 from langgraph.constants import START, END
 from langchain_core.messages import HumanMessage
 
-from src.agents.nodes import create_attendant_node, create_client_node, create_tools_node
+from src.agents.nodes import create_node, create_tools_node
 from src.agents.prompts import get_attendant_prompt, get_client_prompt
 from src.agents.states import GraphState, ResponsibleInfo, EventInfo
 from src.agents.tools import set_final_status, validate_security_keyword
@@ -32,10 +32,10 @@ def create_workflow(initial_state: GraphState, config: Dict = None, scenario: st
     # nodes
     attendant_tools = [set_final_status, validate_security_keyword]
 
-    client_node_fn = create_client_node(client_prompt)
+    client_node_fn = create_node(client_prompt, node_type="cliente")
     workflow.add_node('client_node', lambda state: client_node_fn(state, config))
 
-    attendant_node_fn = create_attendant_node(attendant_prompt, attendant_tools)
+    attendant_node_fn = create_node(attendant_prompt, attendant_tools, "atendente")
     workflow.add_node('attendant_node', lambda state: attendant_node_fn(state, config))
 
     attendant_tools_node_fn = create_tools_node(attendant_tools)

@@ -36,53 +36,37 @@ def validate_message_sequence(messages: List) -> List:
                 tool_call_ids_to_match.remove(msg.tool_call_id)
         else:
             valid_messages.append(msg)
-    
+
     return valid_messages
 
 
-def create_attendant_node(system_message: str, tools: List[Any]):
+def create_node(system_message: str, tools: List[Any] = None, node_type: str = "generic"):
     llm = create_llm()
-    
-    def attendant_node(state: Any, config: Dict = None) -> Dict:
+
+    def node(state: Any, config: Dict = None) -> Dict:
         messages = [SystemMessage(content=system_message)]
         messages.extend(get_recent_messages(state))
-        
+
         try:
-            llm_with_tools = llm.bind_tools(tools=tools, tool_choice='auto')
-            result = llm_with_tools.invoke(messages, config)
-            
+            if tools:
+                llm_with_tools = llm.bind_tools(tools=tools, tool_choice='auto')
+                result = llm_with_tools.invoke(messages, config)
+            else:
+                result = llm.invoke(messages, config)
+
             return {
                 'messages': [AIMessage(content=result.content, tool_calls=result.tool_calls)]
             }
         except Exception as e:
-            print(f'Erro no atendente: {e}')
+            print(f'Erro no {node_type}: {e}')
             return {}
-    
-    return attendant_node
 
-
-def create_client_node(system_message: str):
-    llm = create_llm()
-    
-    def client_node(state: Any, config: Dict = None) -> Dict:
-        messages = [SystemMessage(content=system_message)]
-        messages.extend(get_recent_messages(state))
-        
-        try:
-            result = llm.invoke(messages, config)
-            return {
-                'messages': [AIMessage(content=result.content, tool_calls=result.tool_calls)]
-            }
-        except Exception as e:
-            print(f'Erro no cliente: {e}')
-            return {}
-    
-    return client_node
+    return node
 
 
 def create_tools_node(tools: List[Any]):
     tool_node = ToolNode(tools)
-    
+
     def tools_node(state: Any, config: Dict = None):
         try:
             return tool_node
@@ -90,5 +74,5 @@ def create_tools_node(tools: List[Any]):
             return {
                 "messages": [SystemMessage(content=f"Erro ao processar ferramenta: {e}")]
             }
-    
+
     return tools_node
