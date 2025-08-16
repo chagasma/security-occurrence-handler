@@ -4,8 +4,6 @@
 
 Sistema de atendimento inteligente de ocorrências de alarme usando agentes LLM que simula conversas entre atendente e cliente seguindo protocolos de segurança específicos.
 
-Link para um curto vídeo demonstrativo: https://drive.google.com/file/d/13doFe2E2V6gDfwDxiMZGpLxxq-dAQgqQ/view?usp=sharing
-
 ## Funcionalidades
 
 **Agente Atendente**: Segue protocolo de validação de segurança e toma decisões baseadas nas respostas do cliente
