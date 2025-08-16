@@ -43,8 +43,8 @@ Link para um curto vídeo demonstrativo: https://drive.google.com/file/d/13doFe2
 ```
 src/
 ├── agents/                 # Lógica dos agentes LLM
-│   ├── core/              # Classes base (Node, LLMNode, etc.)
 │   ├── graph.py           # Orquestração LangGraph
+│   ├── nodes.py           # Classes base e nós dos agentes
 │   ├── prompts.py         # Templates de prompt
 │   ├── states.py          # Estados e modelos de dados
 │   └── tools.py           # Ferramentas (validação, status)
@@ -57,6 +57,7 @@ src/
     └── occurrence_processor.py  # Processamento assíncrono
 
 data/                      # Dados de teste
+docs/                      # Documentação e diagramas
 tests/                     # Testes automatizados
 ```
 
