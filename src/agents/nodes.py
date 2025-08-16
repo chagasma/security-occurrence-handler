@@ -9,9 +9,7 @@ load_dotenv()
 
 
 def get_recent_messages(state: Any, limit: int = 30) -> List:
-    messages = state['messages']
-    start_index = max(0, len(messages) - limit)
-    return messages[start_index:]
+    return state['messages'][-limit:]
 
 
 def create_node(system_message: str, tools: List[Any] = None, node_type: str = "generic"):
