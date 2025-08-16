@@ -1,47 +1,24 @@
 import os
 from typing import Dict, List, Any
 from dotenv import load_dotenv
-from langchain_core.messages import SystemMessage, ToolMessage, AIMessage
+from langchain_core.messages import SystemMessage, AIMessage
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import ToolNode
 
 load_dotenv()
 
 
-def create_llm():
-    return ChatOpenAI(
-        temperature=0,
-        model_name=os.getenv('OPENAI_LLM_MODEL_NAME')
-    )
-
-
-def get_recent_messages(state: Any, limit: int = 12) -> List:
+def get_recent_messages(state: Any, limit: int = 30) -> List:
     messages = state['messages']
     start_index = max(0, len(messages) - limit)
-    return validate_message_sequence(messages[start_index:])
-
-
-def validate_message_sequence(messages: List) -> List:
-    valid_messages = []
-    tool_call_ids_to_match = set()
-
-    for msg in messages:
-        if hasattr(msg, 'tool_calls') and msg.tool_calls:
-            for tool_call in msg.tool_calls:
-                tool_call_ids_to_match.add(tool_call.get('id'))
-            valid_messages.append(msg)
-        elif isinstance(msg, ToolMessage):
-            if msg.tool_call_id in tool_call_ids_to_match:
-                valid_messages.append(msg)
-                tool_call_ids_to_match.remove(msg.tool_call_id)
-        else:
-            valid_messages.append(msg)
-
-    return valid_messages
+    return messages[start_index:]
 
 
 def create_node(system_message: str, tools: List[Any] = None, node_type: str = "generic"):
-    llm = create_llm()
+    llm = ChatOpenAI(
+        temperature=0,
+        model_name=os.getenv('OPENAI_LLM_MODEL_NAME')
+    )
 
     def node(state: Any, config: Dict = None) -> Dict:
         messages = [SystemMessage(content=system_message)]
