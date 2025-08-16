@@ -4,8 +4,6 @@
 
 Sistema de atendimento inteligente de ocorrências de alarme usando agentes LLM que simula conversas entre atendente e cliente seguindo protocolos de segurança específicos.
 
-Link para um curto vídeo demonstrativo: https://drive.google.com/file/d/13doFe2E2V6gDfwDxiMZGpLxxq-dAQgqQ/view?usp=sharing
-
 ## Funcionalidades
 
 **Agente Atendente**: Segue protocolo de validação de segurança e toma decisões baseadas nas respostas do cliente
@@ -63,13 +61,13 @@ tests/                     # Testes automatizados
 
 ## Cenários de Teste
 
-| Cenário | Comportamento | Status Final |
-|---------|---------------|--------------|
-| `correct_password_ok` | Palavra correta → "Está tudo bem" | `RESOLVIDO` |
-| `wrong_password` | Palavra incorreta | `ESCALADO` |
-| `correct_password_danger` | Palavra correta → "Estou com perigo" | `ESCALADO` |
-| `panic_word` | Palavra de pânico | `ESCALADO` |
-| `who_is_auria` | Pergunta sobre empresa → Continua normal | `RESOLVIDO` |
+| Cenário                   | Comportamento                            | Status Final |
+|---------------------------|------------------------------------------|--------------|
+| `correct_password_ok`     | Palavra correta → "Está tudo bem"        | `RESOLVIDO`  |
+| `wrong_password`          | Palavra incorreta                        | `ESCALADO`   |
+| `correct_password_danger` | Palavra correta → "Estou com perigo"     | `ESCALADO`   |
+| `panic_word`              | Palavra de pânico                        | `ESCALADO`   |
+| `who_is_auria`            | Pergunta sobre empresa → Continua normal | `RESOLVIDO`  |
 
 ## Configuração e Execução
 
@@ -97,6 +95,7 @@ tests/                     # Testes automatizados
 ### Execução Local
 
 **Opção 1: Python Virtual Environment**
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
@@ -108,6 +107,7 @@ uvicorn src.api.main:app --reload
 ```
 
 **Opção 2: Docker**
+
 ```bash
 docker-compose up --build
 ```
@@ -203,25 +203,31 @@ Status Final: RESOLVIDO
 
 ```json
 {
-  "test_cases": [{
-    "client_context": {
-      "client_details": {
-        "responsibles_details": [{
-          "name": "Carlos",
-          "phone_number_1": "11987654321",
-          "question": "Qual seu hobby favorito?",
-          "correct_answer": "Caminhada",
-          "panic_answer": "Natação",
-          "function": "ZELADOR"
-        }]
-      }
-    },
-    "events_details": [{
-      "name": "ALARME DE ZONA SENSOR PORTA VEICULAR",
-      "description": "Disparo de alarme na zona de acesso veicular.",
-      "zone_code": "6 - SENSOR PORTA VEICULAR"
-    }]
-  }]
+  "test_cases": [
+    {
+      "client_context": {
+        "client_details": {
+          "responsibles_details": [
+            {
+              "name": "Carlos",
+              "phone_number_1": "11987654321",
+              "question": "Qual seu hobby favorito?",
+              "correct_answer": "Caminhada",
+              "panic_answer": "Natação",
+              "function": "ZELADOR"
+            }
+          ]
+        }
+      },
+      "events_details": [
+        {
+          "name": "ALARME DE ZONA SENSOR PORTA VEICULAR",
+          "description": "Disparo de alarme na zona de acesso veicular.",
+          "zone_code": "6 - SENSOR PORTA VEICULAR"
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -231,8 +237,14 @@ Status Final: RESOLVIDO
 {
   "status_final": "RESOLVIDO",
   "mensagens": [
-    {"de": "atendente", "mensagem": "..."},
-    {"de": "cliente", "mensagem": "..."}
+    {
+      "de": "atendente",
+      "mensagem": "..."
+    },
+    {
+      "de": "cliente",
+      "mensagem": "..."
+    }
   ]
 }
 ```
